@@ -109,6 +109,43 @@ module.exports.deleteUser = async (req, res, next) => {
     next(error);
   }
 };
+//***************** Homework */
+ // 1 variant
+module.exports.getOneUserByPk = async (req, res, next) => {
+  try {
+    const {
+     
+      params: { idUser },
+    } = req;
+        const user = await User.findByPk(idUser);
+    user.password = undefined;
+    res.status(200).send({ data: user });
+  } catch (error) {
+    next(error);
+  }
+};
+
+  // 2 variant
+module.exports.getOneUserfindOne = async (req, res, next) => {
+  try {
+    const {
+           params: { idUser },
+    } = req;
+   
+    const user = await User.findOne(
+      {
+        where: { id: idUser },
+        // where: { lastName: idUser },
+      }
+    );
+    user.password = undefined;
+    res.status(200).send({ data: user });
+  } catch (error) {
+    next(error);
+  }
+};
+
+
 
 // !!!!!!!!!!!!
 // JSON не може передавати функцію, символ, undefined

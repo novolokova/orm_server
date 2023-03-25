@@ -13,5 +13,7 @@ router.get('/users', UserController.getAllUsers);
 router.patch('/users/:idUser', UserController.updateUser);
 router.patch('/users/instance/:idUser', UserController.updateUserInstance);
 router.delete('/users/:idUser', UserController.deleteUser);
+router.get('/users/:idUser', UserController.getOneUserByPk);
+router.get('/users/findOne/:idUser', UserController.getOneUserfindOne);
 
 module.exports = router;
