@@ -1,5 +1,5 @@
 const { User } = require('../models'); // db[model.name] = model ---властивість нашої db (саме таблиці "users"---таблиця в множені а модель в однині), робимо деструктурізацію
-const { Op } = require('sequelize');// Operators 
+const { Op } = require('sequelize'); // Operators
 
 module.exports.createUser = async (req, res, next) => {
   try {
@@ -16,26 +16,26 @@ module.exports.getAllUsers = async (req, res, next) => {
   try {
     const users = await User.findAll({
       attributes: { exclude: ['password'] },
-    //   attributes:  ['id', 'email', ['first_name', 'name']] // 'first_name' писати стовбець як у таблиці в БД
-        // where: {
-        // //   firstName: 'Brad',
-        // //   lastName: 'Pitt'
+      //   attributes:  ['id', 'email', ['first_name', 'name']] // 'first_name' писати стовбець як у таблиці в БД
+      // where: {
+      // //   firstName: 'Brad',
+      // //   lastName: 'Pitt'
 
-        // //   [Op.or]: { id: [1, 6] },  //  id: 1, 6
+      // //   [Op.or]: { id: [1, 6] },  //  id: 1, 6
 
-        // // [Op.or]:{
-        // //     id:{// не дорівнює  id: 6
-        // //         [Op.ne]:6
-        // //     }
-        // // }
+      // // [Op.or]:{
+      // //     id:{// не дорівнює  id: 6
+      // //         [Op.ne]:6
+      // //     }
+      // // }
 
-        // // [Op.or]:{
-        // //     firstName:{ // усіх окрім firstName: Brad
-        // //         [Op.ne]: 'Brad'
-        // //     }
-        // // }
-         
-        // },
+      // // [Op.or]:{
+      // //     firstName:{ // усіх окрім firstName: Brad
+      // //         [Op.ne]: 'Brad'
+      // //     }
+      // // }
+
+      // },
     });
     res.status(200).send({ data: users });
   } catch (error) {
@@ -51,17 +51,17 @@ module.exports.updateUser = async (req, res, next) => {
       params: { idUser },
     } = req;
     const [rowsCount, [updatedUser]] = await User.update(body, {
-        // 1 variant
+      // 1 variant
       where: {
         id: {
           [Op.eq]: idUser, // *** *** однаковая запись
         },
       },
       returning: true,
-        returning: ['email', 'last_name'],
+      returning: ['email', 'last_name'],
     });
     // optimal !!!!
-    // updatedUser.password = undefined;
+    updatedUser.password = undefined;
 
     // not optimal !!!!!!
     // const user = updatedUser.get()
@@ -97,7 +97,7 @@ module.exports.deleteUser = async (req, res, next) => {
       params: { idUser },
     } = req;
     const userInstance = await User.findByPk(idUser);
-    //1 variant 
+    //1 variant
     // const deletedUser = await User.destroy({
     //   where: {id: idUser} // *** однаковая запись
     // })
@@ -110,14 +110,13 @@ module.exports.deleteUser = async (req, res, next) => {
   }
 };
 //***************** Homework */
- // 1 variant
+// 1 variant
 module.exports.getOneUserByPk = async (req, res, next) => {
   try {
     const {
-     
       params: { idUser },
     } = req;
-        const user = await User.findByPk(idUser);
+    const user = await User.findByPk(idUser);
     user.password = undefined;
     res.status(200).send({ data: user });
   } catch (error) {
@@ -125,27 +124,23 @@ module.exports.getOneUserByPk = async (req, res, next) => {
   }
 };
 
-  // 2 variant
+// 2 variant
 module.exports.getOneUserfindOne = async (req, res, next) => {
   try {
     const {
-           params: { idUser },
+      params: { idUser },
     } = req;
-   
-    const user = await User.findOne(
-      {
-        where: { id: idUser },
-        // where: { lastName: idUser },
-      }
-    );
+
+    const user = await User.findOne({
+      where: { id: idUser },
+      // where: { lastName: idUser },
+    });
     user.password = undefined;
     res.status(200).send({ data: user });
   } catch (error) {
     next(error);
   }
 };
-
-
 
 // !!!!!!!!!!!!
 // JSON не може передавати функцію, символ, undefined
