@@ -1,4 +1,5 @@
 const { Task } = require('../models');
+const { User } = require('../models');
 
 // module.exports.createTask = async (req, res, next) => {
 //     try {
@@ -58,29 +59,51 @@ module.exports.deleteUserTask = async (req, res, next) => {
 };
 
 module.exports.getOneTask = async (req, res, next) => {
+  // 1 variant
+  // try {
+  //   const {
+  //     params: { idTask, idUser },
+  //   } = req;
+  //   const task = await Task.findOne({
+  //     where: { id: idTask, userId: idUser },
+  //   });
+  //   res.status(202).send({ data: task.content });
+  // } catch (error) {
+  //   next(error);
+  // }
+
+  // 2 variant
   try {
-    const {
-      params: { idTask, idUser },
-    } = req;
-    const task = await Task.findOne({
-      where: { id: idTask, userId: idUser },
-    });
-    res.status(202).send({ data: task.content });
+    const { userInstance, taskInstance } = req;
+    await userInstance.getTasks();
+    res.status(202).send({ data: taskInstance });
   } catch (error) {
     next(error);
   }
 };
 
 module.exports.updateTask = async (req, res, next) => {
+  // 1 variant
+  // try {
+  //   const {
+  //     body,
+  //     params: { idTask, idUser },
+  //   } = req;
+  //   const findTask = await Task.findOne({
+  //     where: { id: idTask, userId: idUser },
+  //   });
+  //   const taskUpdated = await findTask.update(body, {
+  //     returning: true,
+  //   });
+  //   res.status(202).send({ data: taskUpdated });
+  // } catch (error) {
+  //   next(error);
+  // }
+
+  // 2 variant
   try {
-    const {
-      body,
-      params: { idTask, idUser },
-    } = req;
-    const findTask = await Task.findOne({
-      where: { id: idTask, userId: idUser },
-    });
-    const taskUpdated = await findTask.update(body, {
+    const { body, taskInstance } = req;
+    const taskUpdated = await taskInstance.update(body, {
       returning: true,
     });
     res.status(202).send({ data: taskUpdated });
