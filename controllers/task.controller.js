@@ -51,11 +51,29 @@ module.exports.deleteUserTask = async (req, res, next) => {
       taskInstance,
       params: { idTask },
     } = req;
-    await taskInstance.destroy(idTask);
+    await taskInstance.destroy();
     res.status(200).send(`Task id:${idTask} removed`);
   } catch (error) {
     next(error);
   }
+
+  // //??????????
+  // try {
+  //   const {
+  //     taskInstance, userInstance,
+  //     params: { idTask },
+  //   } = req;
+  //   console.log(taskInstance, userInstance)
+
+  //  const task = await userInstance.removeTask(taskInstance._id);
+   
+  //  console.log(task)
+  //   res.status(200).send(`Task id:${idTask} removed`);
+  //    } catch (error) {
+  //   next(error);
+  // }
+
+
 };
 
 module.exports.getOneTask = async (req, res, next) => {
@@ -111,3 +129,14 @@ module.exports.updateTask = async (req, res, next) => {
     next(error);
   }
 };
+
+module.exports.getAllTasks = async (req, res, next) => {
+  try {
+    const { paginate = {} } = req;
+    const tasks = await Task.findAll({ ...paginate });
+    res.status(200).send({ data: tasks });
+  } catch (error) {
+    next(error);
+  }
+};
+

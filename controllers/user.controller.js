@@ -130,10 +130,8 @@ module.exports.getOneUserfindOne = async (req, res, next) => {
     const {
       params: { idUser },
     } = req;
-
     const user = await User.findOne({
       where: { id: idUser },
-      // where: { lastName: idUser },
     });
     user.password = undefined;
     res.status(200).send({ data: user });

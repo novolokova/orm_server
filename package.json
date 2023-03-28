@@ -12,6 +12,7 @@
   "dependencies": {
     "date-fns": "^2.29.3",
     "express": "^4.18.2",
+    "lodash": "^4.17.21",
     "pg": "^8.10.0",
     "pg-hstore": "^2.3.4",
     "sequelize": "^6.29.3"

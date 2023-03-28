@@ -1,1 +1,1 @@
-DELETE http://localhost:3000/api/users/5/tasks  HTTP/1.1
+DELETE http://localhost:3000/api/tasks/users/914 HTTP/1.1
