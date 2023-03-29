@@ -1,11 +1,17 @@
-const { User } = require('../models'); // db[model.name] = model ---властивість нашої db (саме таблиці "users"---таблиця в множені а модель в однині), робимо деструктурізацію
+const createError = require('http-errors')
 const { Op } = require('sequelize'); // Operators
+const { User } = require('../models'); // db[model.name] = model ---властивість нашої db (саме таблиці "users"---таблиця в множені а модель в однині), робимо деструктурізацію
+
 
 module.exports.createUser = async (req, res, next) => {
   try {
     const { body } = req;
     const createdUser = await User.create(body);
-    // console.log(createdUser);
+    if(!createdUser){
+      // throw new Error("404 user not found")
+      return next(createError(400, 'Check your data'));
+    
+    }
     res.status(201).send({ data: createdUser });
   } catch (error) {
     next(error);
@@ -117,6 +123,11 @@ module.exports.getOneUserByPk = async (req, res, next) => {
       params: { idUser },
     } = req;
     const user = await User.findByPk(idUser);
+    if(!user){
+      // throw new Error("404 user not found")
+      const error = createError(404, 'User not found');
+      return next(error)
+    }
     user.password = undefined;
     res.status(200).send({ data: user });
   } catch (error) {

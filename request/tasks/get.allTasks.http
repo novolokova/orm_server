@@ -1,6 +1,6 @@
 GET http://localhost:3000/api/tasks?limit=5&offset=0 HTTP/1.1
 
 
-
+# calculate offset for paginatoin
 # limit = 10
 # offset = res * (page-1)

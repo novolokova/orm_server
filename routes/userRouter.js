@@ -7,7 +7,7 @@ const userRouter = Router();
 
 userRouter.post('/', UserController.createUser);
 userRouter.get('/', UserController.getAllUsers);
-userRouter.get('/:idUser', checkUser, UserController.getOneUserByPk); //1 variant
+userRouter.get('/:idUser', UserController.getOneUserByPk); //1 variant
 userRouter.get('/:idUser', checkUser, UserController.getOneUserfindOne);//2 variant
 userRouter.delete('/:idUser', checkUser, UserController.deleteUser);
 userRouter.patch('/:idUser', checkUser, UserController.updateUser);

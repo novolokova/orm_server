@@ -18,8 +18,10 @@ app.use((err, req, res, next) => {
 });
 
 app.use((err, req, res, next) => {
-  res.status(500).send({
-    errors: [{ title: err.message }],
+  console.log(err)
+  const status = err.status || 500;
+  res.status(status).send({
+    errors: [{ title: err.message || 'Server error!!!'}],
   });
 });
 

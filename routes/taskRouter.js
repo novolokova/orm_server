@@ -10,7 +10,7 @@ const taskRouter = Router();
 
 taskRouter.post('/users/:idUser', checkUser, TaskController.createTask);
 taskRouter.get('/', paginate, TaskController.getAllTasks);
-taskRouter.get('/users/:idUser', checkUser, TaskController.getUserTasks);
+taskRouter.get('/users/:idUser', checkUser, paginate, TaskController.getUserTasks);
 taskRouter.get('/users/:idUser/:idTask',checkUser, checkTask, TaskController.getOneTask);
 taskRouter.delete('/:idTask/users/:idUser', checkUser, checkTask, TaskController.deleteUserTask);
 taskRouter.delete('/users/:idUser', TaskController.deleteAllUserTasks);

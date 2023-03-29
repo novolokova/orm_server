@@ -21,10 +21,11 @@ module.exports.createTask = async (req, res, next) => {
   }
 };
 
+// edd paginate
 module.exports.getUserTasks = async (req, res, next) => {
   try {
-    const { userInstance } = req;
-    const tasks = await userInstance.getTasks();
+    const { userInstance, paginate = {} } = req;
+    const tasks = await userInstance.getTasks({...paginate});
     res.status(200).send({ data: tasks });
   } catch (error) {
     next(error);
