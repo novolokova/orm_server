@@ -1,3 +1,4 @@
+const createError = require('http-errors');
 const { Task } = require('../models');
 const { User } = require('../models');
 
@@ -11,6 +12,10 @@ const { User } = require('../models');
 //     }
 //   };
 
+// if (!updatedUser) {
+//   return next(createError(404, 'User not ////found'));
+// }
+
 module.exports.createTask = async (req, res, next) => {
   try {
     const { userInstance, body } = req;
@@ -21,12 +26,34 @@ module.exports.createTask = async (req, res, next) => {
   }
 };
 
-// edd paginate
+module.exports.getAllTasks = async (req, res, next) => {
+  try {
+    const { paginate = {} } = req;
+    const tasks = await Task.findAll({ ...paginate });
+    if (!tasks) {
+      return next(createError(404, 'Tasks not found'));
+    }
+    res.status(200).send({ data: tasks });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports.getUserTasks = async (req, res, next) => {
   try {
     const { userInstance, paginate = {} } = req;
-    const tasks = await userInstance.getTasks({...paginate});
+    const tasks = await userInstance.getTasks({ ...paginate });
     res.status(200).send({ data: tasks });
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports.getOneTask = async (req, res, next) => {
+  try {
+    const { userInstance, taskInstance } = req;
+    await userInstance.getTasks();
+    res.status(202).send({ data: taskInstance });
   } catch (error) {
     next(error);
   }
@@ -40,13 +67,17 @@ module.exports.deleteAllUserTasks = async (req, res, next) => {
     const deletedTasks = await Task.destroy({
       where: { userId: idUser },
     });
+    if (!deletedTasks) {
+      return next(createError(404, 'User not found'));
+    }
     res.status(202).send(`All tasks userId:${idUser} removed`);
   } catch (error) {
     next(error);
   }
 };
 
-module.exports.deleteUserTask = async (req, res, next) => {
+
+module.exports.deleteTask = async (req, res, next) => {
   try {
     const {
       taskInstance,
@@ -57,87 +88,19 @@ module.exports.deleteUserTask = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-
-  // //??????????
-  // try {
-  //   const {
-  //     taskInstance, userInstance,
-  //     params: { idTask },
-  //   } = req;
-  //   console.log(taskInstance, userInstance)
-
-  //  const task = await userInstance.removeTask(taskInstance._id);
-   
-  //  console.log(task)
-  //   res.status(200).send(`Task id:${idTask} removed`);
-  //    } catch (error) {
-  //   next(error);
-  // }
-
-
-};
-
-module.exports.getOneTask = async (req, res, next) => {
-  // 1 variant
-  // try {
-  //   const {
-  //     params: { idTask, idUser },
-  //   } = req;
-  //   const task = await Task.findOne({
-  //     where: { id: idTask, userId: idUser },
-  //   });
-  //   res.status(202).send({ data: task.content });
-  // } catch (error) {
-  //   next(error);
-  // }
-
-  // 2 variant
-  try {
-    const { userInstance, taskInstance } = req;
-    await userInstance.getTasks();
-    res.status(202).send({ data: taskInstance });
-  } catch (error) {
-    next(error);
-  }
 };
 
 module.exports.updateTask = async (req, res, next) => {
-  // 1 variant
-  // try {
-  //   const {
-  //     body,
-  //     params: { idTask, idUser },
-  //   } = req;
-  //   const findTask = await Task.findOne({
-  //     where: { id: idTask, userId: idUser },
-  //   });
-  //   const taskUpdated = await findTask.update(body, {
-  //     returning: true,
-  //   });
-  //   res.status(202).send({ data: taskUpdated });
-  // } catch (error) {
-  //   next(error);
-  // }
-
-  // 2 variant
-  try {
+   try {
     const { body, taskInstance } = req;
     const taskUpdated = await taskInstance.update(body, {
       returning: true,
     });
+    if (!taskUpdated) {
+      return next(createError(400, 'check your data'));
+    }
     res.status(202).send({ data: taskUpdated });
   } catch (error) {
     next(error);
   }
 };
-
-module.exports.getAllTasks = async (req, res, next) => {
-  try {
-    const { paginate = {} } = req;
-    const tasks = await Task.findAll({ ...paginate });
-    res.status(200).send({ data: tasks });
-  } catch (error) {
-    next(error);
-  }
-};
-

@@ -1,7 +1,7 @@
-PATCH http://localhost:3000/api/tasks/users/902/1686 HTTP/1.1
+PATCH http://localhost:3000/api/tasks/1684 HTTP/1.1
 Content-Type: application/json
 
 { 
-   "content": "update........... 1686",
+   "content": "update......... 1684",
    "isDone": true
 }
