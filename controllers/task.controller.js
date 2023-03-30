@@ -16,10 +16,13 @@ const { User } = require('../models');
 //   return next(createError(404, 'User not ////found'));
 // }
 
+const checkBody = (body)=>_.pick(body, ['content', 'isDone', 'deadLine'])// захищає від непотрібних данних які можуть зіпсувати нащі данні в БД
+
 module.exports.createTask = async (req, res, next) => {
   try {
     const { userInstance, body } = req;
-    const task = await userInstance.createTask(body);
+    const values = checkBody(body);
+    const task = await userInstance.createTask(values);
     res.status(201).send({ data: task });
   } catch (error) {
     next(error);
@@ -93,7 +96,8 @@ module.exports.deleteTask = async (req, res, next) => {
 module.exports.updateTask = async (req, res, next) => {
    try {
     const { body, taskInstance } = req;
-    const taskUpdated = await taskInstance.update(body, {
+    const values = checkBody(body);
+    const taskUpdated = await taskInstance.update(values, {
       returning: true,
     });
     if (!taskUpdated) {

@@ -43,7 +43,7 @@ module.exports = (sequelize, DataTypes) => {
       sequelize,
       modelName: 'Group',
       tableName: 'groups',
-      underscored: true,
+      underscored: true,// ті поля котрі йдуть за замовчуванням щоб переводилися у snake-case field: 'updated_at' ....
     }
   );
   return Group;

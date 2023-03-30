@@ -2,7 +2,7 @@ const express = require('express');
 const { ValidationError } = require('sequelize');
 const router = require('./routes');
 const app = express();
-app.use(express.static('public'))
+app.use(express.static('public'))// можливість працювати з статичними файлами (з папки public)
 app.use(express.json()); // Content-Type: application/json - если не пропишем в requests то этот метод не будет работать не сможет читать
 
 //http://localhost:3000/api

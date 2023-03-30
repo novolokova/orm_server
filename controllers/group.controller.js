@@ -2,16 +2,17 @@ const createError = require('http-errors');
 const _ = require('lodash');
 const { Group, User } = require('../models');
 
+const checkBody = (body) =>
+  _.pick(body, ['name', 'imagePath', 'descriptition', 'isAdult']); // захищає від непотрібних данних які можуть зіпсувати нащі данні в БД
+
 module.exports.createUserGroup = async (req, res, next) => {
   try {
-    const { body } = req;
-    const values = _.pick(body, [
-      'name',
-      // 'imagePath',
-      'description',
-      'isAdult',
-    ]);
-    const group = await Group.create(values);
+    const {
+      body,
+      file: { filename },
+    } = req;
+    const values = checkBody(body);
+    const group = await Group.create({ ...values, imagePath: filename });
     if (!group) {
       return next(createError(400, 'Bad request'));
     }
@@ -19,7 +20,7 @@ module.exports.createUserGroup = async (req, res, next) => {
     if (!user) {
       return next(createError(404, 'user not found'));
     }
-    await group.addUser(user);
+    await group.addUser(user); // створює кортеж в додатковій таблиці users_to_groups,
     res.status(201).send({ data: group });
   } catch (error) {
     next(error);
@@ -33,6 +34,7 @@ module.exports.getUserGroups = async (req, res, next) => {
     } = req;
     const userWithGroups = await User.findByPk(idUser, {
       include: {
+        // прибрали зайву інфу, з додаткової таблиці users_to_groups
         model: Group,
         through: {
           attributes: [],
@@ -53,14 +55,19 @@ module.exports.addImageGroup = async (req, res, next) => {
   try {
     const {
       params: { idGroup },
-      file: { filename }, // пришел к нам из мидлвара-multer
+      file: { filename }, // пришел к нам из  (встроенного) Middleware - multer -express(Handle multi-part form data.)
     } = req;
-    const [rowCount,[updatedGroups]] = await Group.update(
+    //console.log(req.file)- багато властивостей по яким можемо валідувати(через власний мiddleware) наш Image()
+    const values = checkBody(body);
+    const [rowCount, [updatedGroups]] = await Group.update(
+      values,
       { imagePath: filename },
       { where: { id: idGroup }, returning: true }
     );
-
-    res.status(200).send({ data: updatedGroups});
+    if (!updatedGroups) {
+      return next(createError(400, 'Bad request'));
+    }
+    res.status(200).send({ data: updatedGroups });
   } catch (error) {
     next(error);
   }

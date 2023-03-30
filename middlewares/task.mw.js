@@ -8,7 +8,7 @@ module.exports.checkTask = async (req, res, next) => {
     } = req;
     const taskInstance = await Task.findByPk(idTask);
     if (!taskInstance) {
-      return next(createError(404, 'Task not found *****'));
+      return next(createError(404, 'Task not found'));
     }
     req.taskInstance = taskInstance;
     next();

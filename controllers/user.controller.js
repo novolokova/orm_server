@@ -3,14 +3,14 @@ const { Op } = require('sequelize'); // Operators
 const _ = require('lodash');
 const { User } = require('../models'); // db[model.name] = model ---властивість нашої db (саме таблиці "users"---таблиця в множені а модель в однині), робимо деструктурізацію
 
-const checkBody = (body)=>_.pick(body, ['firstName', 'lastName', 'email', 'password', 'birthday', 'isMale'])
+const checkBody = (body)=>_.pick(body, ['firstName', 'lastName', 'email', 'password', 'birthday', 'isMale'])// захищає від непотрібних данних які можуть зіпсувати нащі данні в БД
 
 
 module.exports.createUser = async (req, res, next) => {
   try {
     const { body } = req;
-    
-    const createdUser = await User.create(checkBody);
+    const values = checkBody(body);
+    const createdUser = await User.create(values);
     if (!createdUser) {
       return next(createError(400, 'Check your data'));
     }
@@ -120,7 +120,8 @@ module.exports.updateUser = async (req, res, next) => {
       body,
       params: { idUser },
     } = req;
-    const [rowsCount, [updatedUser]] = await User.update(body, {
+    const values = checkBody(body);
+    const [rowsCount, [updatedUser]] = await User.update(values, {
       // 1 variant
       where: {
         id: {
@@ -174,7 +175,8 @@ module.exports.updateUserInstance = async (req, res, next) => {
   // use checkUser
   try {
     const { body, userInstance } = req;
-    const userUpdated = await userInstance.update(body, {
+    const values = checkBody(body);
+    const userUpdated = await userInstance.update(values, {
       returning: true,
     });
     if (!updatedUser) {
