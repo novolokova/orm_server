@@ -4,7 +4,9 @@
     "password": "postgres",
     "database": "fm_orm",
     "host": "localhost",
-    "dialect": "postgres"
+    "dialect": "postgres",
+    "migrationStorage": "json",
+    "seederStorage": "json"
   },
   "test": {},
   "production": {}

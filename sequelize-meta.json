@@ -1,0 +1,7 @@
+[
+  "20230323081520-create-user.js",
+  "20230327061614-create-task.js",
+  "20230329070525-create-group.js",
+  "20230329071806-users_to_groups.js",
+  "20230330061104-alter-group.js"
+]
